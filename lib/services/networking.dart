@@ -13,10 +13,13 @@ class NetworkHelper {
     if(response.statusCode == 200) {
       var decodedData = jsonDecode(response.body);
       var lastPrice = decodedData['exchange_rates'][currencyChanger];
+      print("data fetched");
       return lastPrice;
     }
     else {
       print(response.statusCode);
+      print("I am error");
+      return 429;
     }
   }
 

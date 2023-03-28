@@ -15,24 +15,44 @@ class PriceScreen extends StatefulWidget {
 class _PriceScreenState extends State<PriceScreen> {
 
   String currencyChanger = 'AUD';
-  String price = '?';
+  String priceBTC = '?';
+  String priceETH = '?';
+  String priceLTC = '?';
+  String priceBNB = '?';
+  String priceXRP = '?';
+  String priceDOGE = '?';
+
+  String priceBTC1 = '?';
+  String priceETH1 = '?';
+  String priceLTC1 = '?';
+  String priceBNB1 = '?';
+  String priceXRP1 = '?';
+  String priceDOGE1 = '?';
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    getData();
+    get();
   }
 
-  void getData() async{
-    try {
-      var priceOfBTC = await PriceOfBTC().getBTCCurrentPrice(currencyChanger);
+  void get() async {
+      priceBTC1 = await getData(cryptoList[0]);
+      priceETH1 = await getData(cryptoList[1]);
+      priceLTC1 = await getData(cryptoList[2]);
+      priceBNB1 = await getData(cryptoList[3]);
+      priceXRP1 = await getData(cryptoList[4]);
+      priceDOGE1 = await getData(cryptoList[5]);
       setState(() {
-        price = priceOfBTC.toStringAsFixed(0);
+        priceBTC = priceBTC1;
+        priceETH = priceETH1;
+        priceXRP = priceXRP1;
       });
-    }
-    catch(e) {
-      print(e);
-    }
+  }
+
+  Future getData(String base) async{
+    var price = await Price().getBTCCurrentPrice(base, currencyChanger);
+    print("$base: $price");
+    return price.toStringAsFixed(0);
   }
 
 
@@ -51,7 +71,7 @@ class _PriceScreenState extends State<PriceScreen> {
       onChanged: (value) {
         setState(() {
           currencyChanger = value as String;
-          getData();
+          get();
         });
       },
       items: dropdownItems,
@@ -84,11 +104,12 @@ class _PriceScreenState extends State<PriceScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          CryptoCard(currencyChanger: currencyChanger, price: price, selectedCurrency: cryptoList[0],),
-          CryptoCard(currencyChanger: currencyChanger, price: price, selectedCurrency: cryptoList[1],),
-          CryptoCard(currencyChanger: currencyChanger, price: price, selectedCurrency: cryptoList[2],),
+          CryptoCard(currencyChanger: currencyChanger, price: priceBTC, selectedCurrency: cryptoList[0],),
+          CryptoCard(currencyChanger: currencyChanger, price: priceETH, selectedCurrency: cryptoList[1],),
+          // CryptoCard(currencyChanger: currencyChanger, price: priceDOGE, selectedCurrency: cryptoList[5],),
+          CryptoCard(currencyChanger: currencyChanger, price: priceXRP, selectedCurrency: cryptoList[4],),
           const SizedBox(
-            height: 216.4,
+            height: 56.4,
           ),
           Container(
             height: 150.0,
