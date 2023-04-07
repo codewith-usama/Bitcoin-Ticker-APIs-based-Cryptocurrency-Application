@@ -37,22 +37,24 @@ class _PriceScreenState extends State<PriceScreen> {
 
   void get() async {
       priceBTC1 = await getData(cryptoList[0]);
+      await Future.delayed(const Duration(seconds: 1));
       priceETH1 = await getData(cryptoList[1]);
+      await Future.delayed(const Duration(seconds: 1));
       priceLTC1 = await getData(cryptoList[2]);
-      priceBNB1 = await getData(cryptoList[3]);
-      priceXRP1 = await getData(cryptoList[4]);
+      await Future.delayed(const Duration(seconds: 1));
       priceDOGE1 = await getData(cryptoList[5]);
       setState(() {
         priceBTC = priceBTC1;
         priceETH = priceETH1;
-        priceXRP = priceXRP1;
+        priceLTC = priceLTC1;
+        priceDOGE = priceDOGE1;
       });
   }
 
   Future getData(String base) async{
     var price = await Price().getBTCCurrentPrice(base, currencyChanger);
     print("$base: $price");
-    return price.toStringAsFixed(0);
+    return price.toStringAsFixed(2);
   }
 
 
@@ -71,6 +73,10 @@ class _PriceScreenState extends State<PriceScreen> {
       onChanged: (value) {
         setState(() {
           currencyChanger = value as String;
+          priceBTC = '?';
+          priceETH = '?';
+          priceLTC = '?';
+          priceDOGE = '?';
           get();
         });
       },
@@ -87,12 +93,19 @@ class _PriceScreenState extends State<PriceScreen> {
     return CupertinoPicker(
       backgroundColor: Colors.lightBlue,
       onSelectedItemChanged: (index) {
+        setState(() {
+          currencyChanger = currenciesList[index];
+          priceBTC = '?';
+          priceETH = '?';
+          priceLTC = '?';
+          priceDOGE = '?';
+          get();
+        });
       },
       itemExtent: 30.0,
       children: pickerItems,
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -106,17 +119,17 @@ class _PriceScreenState extends State<PriceScreen> {
         children: <Widget>[
           CryptoCard(currencyChanger: currencyChanger, price: priceBTC, selectedCurrency: cryptoList[0],),
           CryptoCard(currencyChanger: currencyChanger, price: priceETH, selectedCurrency: cryptoList[1],),
-          // CryptoCard(currencyChanger: currencyChanger, price: priceDOGE, selectedCurrency: cryptoList[5],),
-          CryptoCard(currencyChanger: currencyChanger, price: priceXRP, selectedCurrency: cryptoList[4],),
-          const SizedBox(
-            height: 56.4,
-          ),
-          Container(
-            height: 150.0,
-            alignment: Alignment.center,
-            padding: const EdgeInsets.only(bottom: 30.0),
-            color: Colors.lightBlue,
-            child: Platform.isIOS ? IOSPicker() : androidDropdown(),
+          CryptoCard(currencyChanger: currencyChanger, price: priceLTC, selectedCurrency: cryptoList[2],),
+          CryptoCard(currencyChanger: currencyChanger, price: priceDOGE, selectedCurrency: cryptoList[5],),
+          Expanded(child: Container()),
+          SizedBox(
+            height: 120,
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.only(bottom: 30.0),
+              color: Colors.lightBlue,
+              child: Platform.isIOS ? IOSPicker() : androidDropdown(),
+            ),
           ),
         ],
       ),
