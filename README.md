@@ -1,6 +1,9 @@
 # bitcoin_ticker_flutter
 
-A new Flutter project.
+# Demo
+
+https://user-images.githubusercontent.com/99090844/230551520-0db23254-a9e0-47f8-8823-f6c345f29ec7.mp4
+
 
 ## Getting Started
 
